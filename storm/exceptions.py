@@ -18,10 +18,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
+from abc import ABCMeta
+import types
 
 class StormError(Exception):
-    pass
+    __metaclass__ = ABCMeta
 
 
 class CompileError(StormError):
@@ -141,5 +142,8 @@ def install_exceptions(module):
                       OperationalError, ProgrammingError, IntegrityError,
                       DataError, NotSupportedError, InterfaceError):
         module_exception = getattr(module, exception.__name__, None)
-        if module_exception is not None:
-            module_exception.__bases__ += (exception,)
+        if (module_exception is not None and isinstance(module_exception, (type, types.ClassType))):
+            # XXX This may need to be revisited when porting to Python 3 if
+            # virtual subclasses are still ignored for exception handling
+            # (https://bugs.python.org/issue12029).
+            exception.register(module_exception)
