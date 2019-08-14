@@ -83,6 +83,10 @@ class LostObjectError(StoreError):
     pass
 
 
+class ThreadSafetyError(StormError):
+    """Exception raised when cross-threads operations are attempted."""
+
+
 class Error(StormError):
     pass
 

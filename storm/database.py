@@ -24,6 +24,7 @@
 This is the common code for database support; specific databases are
 supported in modules in L{storm.databases}.
 """
+import threading
 
 from storm.expr import Expr, State, compile
 # Circular import: imported at the end of the module.
@@ -32,7 +33,7 @@ from storm.variables import Variable
 from storm.xid import Xid
 from storm.exceptions import (
     ClosedError, ConnectionBlockedError, DatabaseError, DisconnectionError,
-    Error, ProgrammingError)
+    Error, ProgrammingError, ThreadSafetyError)
 from storm.uri import URI
 import storm
 
@@ -186,6 +187,20 @@ class Connection(object):
         self._database = database # Ensures deallocation order.
         self._event = event
         self._raw_connection = self._database.raw_connect()
+        self._thread = threading.currentThread()
+
+    def _check_thread(self):
+        """
+        Check if the current thread is the same thread that created the
+        connection. This is a safety check that prevents breaking thread
+        boundaries which can create weird bugs. C{execute}, C{commit} and
+        C{rollback} should call it, directly or indirectly.
+        """
+        thread = threading.currentThread()
+        if thread is not self._thread:
+            raise ThreadSafetyError(
+                "'%s' is not the connection thread '%s'" %
+                (thread, self._thread))
 
     def __del__(self):
         """Close the connection."""
@@ -309,6 +324,7 @@ class Connection(object):
              of a transaction, and is intended for use in recovery.
         """
         try:
+            self._check_thread()
             if self._state == STATE_CONNECTED:
                 try:
                     if xid:
@@ -414,6 +430,7 @@ class Connection(object):
         If the connection is marked as dead, or if we can't reconnect,
         then raise DisconnectionError.
         """
+        self._check_thread()
         if self._blocked:
             raise ConnectionBlockedError("Access to connection is blocked")
         if self._state == STATE_CONNECTED:
