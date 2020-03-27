@@ -48,8 +48,10 @@ storm/schema/__init__.py
 storm/schema/patch.py
 storm/schema/schema.py
 storm/twisted/__init__.py
+storm/twisted/store.py
 storm/twisted/testing.py
 storm/twisted/transact.py
+storm/twisted/wrapper.py
 storm/zope/__init__.py
 storm/zope/adapters.py
 storm/zope/configure.zcml
@@ -96,6 +98,10 @@ tests/store/mysql.py
 tests/store/postgres.py
 tests/store/sqlite.py
 tests/twisted/__init__.py
+tests/twisted/base.py
+tests/twisted/mysql.py
+tests/twisted/postgres.py
+tests/twisted/sqlite.py
 tests/twisted/transact.py
 tests/zope/README.txt
 tests/zope/__init__.py

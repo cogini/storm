@@ -1,10 +1,12 @@
-Metadata-Version: 1.1
+Metadata-Version: 1.2
 Name: storm
 Version: 0.20
 Summary: Storm is an object-relational mapper (ORM) for Python developed at Canonical.
 Home-page: https://storm.canonical.com
-Author: Storm Developers
-Author-email: storm@lists.canonical.com
+Author: Gustavo Niemeyer
+Author-email: gustavo@niemeyer.net
+Maintainer: Storm Developers
+Maintainer-email: storm@lists.canonical.com
 License: LGPL
 Download-URL: https://launchpad.net/storm/+download
 Description: UNKNOWN
