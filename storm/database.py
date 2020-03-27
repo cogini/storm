@@ -324,7 +324,7 @@ class Connection(object):
              of a transaction, and is intended for use in recovery.
         """
         try:
-            self._check_thread()
+            # self._check_thread()
             if self._state == STATE_CONNECTED:
                 try:
                     if xid:
@@ -430,7 +430,7 @@ class Connection(object):
         If the connection is marked as dead, or if we can't reconnect,
         then raise DisconnectionError.
         """
-        self._check_thread()
+        # self._check_thread()
         if self._blocked:
             raise ConnectionBlockedError("Access to connection is blocked")
         if self._state == STATE_CONNECTED:
